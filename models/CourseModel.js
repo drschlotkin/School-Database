@@ -1,0 +1,33 @@
+'use strict'
+
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose
+
+//Course Schema
+const CourseSchema = new Schema({
+  title:{
+    type: String,
+    required:true
+  },
+  description:{
+    type: String,
+    required:true
+  },
+  estimatedTime:{
+    type: String,
+  },
+  materialsNeeded:{
+    type: String
+  },
+  user:{
+    type: Schema.Types.ObjectId, ref: 'User'
+  }
+});
+
+// Export for use in Routes.js
+const Course = mongoose.model("Course", CourseSchema)
+module.exports.Course = Course;
+
+// Try this once I get everything working, may have to change { Course } to Course
+// const Course = module.exports = mongoose.model('Course', CourseSchema);
