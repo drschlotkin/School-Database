@@ -1,19 +1,19 @@
 'use strict'
 
 const mongoose = require('mongoose');
-
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 //Course Schema
 const CourseSchema = new Schema({
   title:{
     type: String,
-    required:true
+    required: [true, 'You have to include a title']
   },
   description:{
     type: String,
-    required:true
+    required: [true, 'You have to include a description']
   },
+  
   estimatedTime:{
     type: String,
   },

@@ -2,7 +2,7 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const routes = require("./routes")
+const routes = require("./routes/routes")
 const mongoose = require("mongoose")
 
 // parser for JSON(KEEP THIS?)
@@ -15,8 +15,7 @@ const app = express();
 app.use(morgan('dev'));
 
 // JSON parser to manage HTTP request(KEEP THIS?)
-app.use(jsonParser())
-
+app.use(jsonParser());
 
 // Connect to Mongoose
 mongoose.connect("mongodb://localhost:27017/fsjstd-restapi")
@@ -27,15 +26,13 @@ db.on("error", err => {
   console.error("Connection error:", err)
 })
 
-// Listen for database connection and close connection when done communicating
+// Listen for database connection
 db.once("open", () => {
   console.log('db connection successful')
-  // db.close();
 })
 
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
-
 
 // TODO setup your api routes here
 app.use("/api", routes)
@@ -43,7 +40,7 @@ app.use("/api", routes)
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to the REST API project!',
+    message: 'Welcome to my school database REST API project!',
   });
 });
 
@@ -59,7 +56,6 @@ app.use((err, req, res, next) => {
   if (enableGlobalErrorLogging) {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
   }
-
   res.status(err.status || 500).json({
     message: err.message,
     error: {},
