@@ -13,7 +13,6 @@ const CourseSchema = new Schema({
     type: String,
     required: [true, 'You have to include a description']
   },
-  
   estimatedTime:{
     type: String,
   },
@@ -26,8 +25,5 @@ const CourseSchema = new Schema({
 });
 
 // Export for use in Routes.js
-const Course = mongoose.model("Course", CourseSchema)
+const Course = mongoose.model("Course", CourseSchema);
 module.exports.Course = Course;
-
-// Try this once I get everything working, may have to change { Course } to Course
-// const Course = module.exports = mongoose.model('Course', CourseSchema);

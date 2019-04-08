@@ -1,7 +1,7 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 //User Schema
 const UserSchema = new Schema({
@@ -27,5 +27,5 @@ const UserSchema = new Schema({
 });
 
 // Export for use in Routes.js
-const User = mongoose.model("User", UserSchema)
+const User = mongoose.model("User", UserSchema);
 module.exports.User = User;
