@@ -84,7 +84,6 @@ router.put('/courses/:id', authenticateUser, (req, res, next) => {
           error: 'Title AND Description are required.'
         });
       }
-      
     }else{
       res.status(403).json({
         error: 'You are not authorized to update this course.'
