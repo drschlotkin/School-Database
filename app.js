@@ -2,21 +2,23 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const routes = require("./routes/routes");
+const UserRoute = require("./routes/UserRoute");
+const CourseRoute = require("./routes/CourseRoute");
 const mongoose = require("mongoose");
 const jsonParser = require("body-parser").json;
 
-// create the Express app
+// Create the Express app
 const app = express();
 
-// setup morgan for HTTP request logging
+// Setup morgan for HTTP request logging
 app.use(morgan('dev'));
 
 // JSON parser to manage HTTP request
 app.use(jsonParser());
 
 // Connect to Mongoose
-mongoose.connect("mongodb://localhost:27017/fsjstd-restapi");
+mongoose.connect("mongodb://localhost:27017/fsjstd-restapi", { useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
 const db = mongoose.connection;
 
 // Error handler for database
@@ -29,27 +31,29 @@ db.once("open", () => {
   console.log('db connection successful')
 });
 
-// variable to enable global error logging
+// Variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
-// TODO setup your api routes here
-app.use("/api", routes);
+// API routes
+app.use("/api", UserRoute);
+app.use("/api", CourseRoute);
 
-// setup a friendly greeting for the root route
+
+// Friendly greeting for the root route
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to my school database REST API project!',
   });
 });
 
-// send 404 if no other route matched
+// Send 404 if no other route matched
 app.use((req, res) => {
   res.status(404).json({
     message: 'Route Not Found',
   });
 });
 
-// setup a global error handler
+// Global error handler
 app.use((err, req, res, next) => {
   if (enableGlobalErrorLogging) {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
@@ -60,10 +64,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// set our port
+// Set our port
 app.set('port', process.env.PORT || 5000);
 
-// start listening on our port
+// Start listening on our port
 const server = app.listen(app.get('port'), () => {
   console.log(`Express server is listening on port ${server.address().port}`);
 });
