@@ -1,10 +1,13 @@
 # REST API School Database 
 
-<a href="https://teamtreehouse.com" target="_blank">Team Treehouse</a> Full Stack Techdegree - Project #9
+## Details:
+
+* Using Postman, users can interact with database by retrieving a list of courses, as well as adding, updating and deleting courses in the database.
+* User is required to create an account and log-in to make changes to database.
 
 ## Technologies Used:
 
-* MongoDB, Mongoose, JavaScript, Node.js, Express
+* MongoDB, Mongoose, JavaScript, Node.js, Express.js
 
 ## Getting Started
 

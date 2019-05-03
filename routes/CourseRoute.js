@@ -65,31 +65,35 @@ router.post('/courses', authenticateUser, (req, res, next) => {
 /* COURSE PUT ROUTE
 ===================
 Update a course by ID if registered to current user*/
-// 
+
 router.put('/courses/:id', authenticateUser, (req, res, next) => {
   const id = {_id : req.params.id} 
   const opts = { runValidators: true };
-  Course.findById(req.params.id, (err, course) => {
-    if(JSON.stringify(req.currentUser[0]._id) == JSON.stringify(course.user)){
-      if(req.body.title && req.body.description){
-        Course.findOneAndUpdate(id, req.body, opts)
-        .exec()
-        .then((course) => {
-          res.status(204).json(course);
-        }).catch(err => {
-          next(err);
-        });
+  Course.findById(req.params.id)
+    .then(course => {
+      if(JSON.stringify(req.currentUser[0]._id) == JSON.stringify(course.user)){
+        if(req.body.title && req.body.description){
+          Course.findOneAndUpdate(id, req.body, opts)
+            .exec()
+            .then((course) => {
+              res.status(204).json(course);
+            }).catch(err => {
+              next(err);
+          });
+        }else{
+          res.status(400).json({
+            error: 'Title AND Description are required.'
+          });
+        }
       }else{
         res.status(403).json({
-          error: 'Title AND Description are required.'
+          error: 'You are not authorized to update this course.'
         });
-      }
-    }else{
-      res.status(403).json({
-        error: 'You are not authorized to update this course.'
-      });
-    };
-  });
+      };
+    }).catch(err => {
+      err.status = 404;
+      next(err);
+    });   
 });
 
 
@@ -99,18 +103,22 @@ Delete course if registered to current user */
 
 router.delete('/courses/:id', authenticateUser, (req, res, next) => {
   const id = {_id : req.params.id};
-  Course.findById(req.params.id, (err, course) => {
-    if(JSON.stringify(req.currentUser[0]._id) == JSON.stringify(course.user)){
-      Course.remove(id, (err, course) => {
-        if(err) return next(course);
-        res.status(204).json(course);
-      })
-    }else{
-      res.status(403).json({
-        error: 'You are not authorized to delete this course.'
-      });
-    };
-  });
+  Course.findById(req.params.id)
+    .then((course) => {
+      if(JSON.stringify(req.currentUser[0]._id) == JSON.stringify(course.user)){
+        Course.remove(id, (err, course) => {
+          if(err) return next(course);
+          res.status(204).json(course);
+        })
+      }else{
+        res.status(403).json({
+          error: 'You are not authorized to delete this course.'
+        });
+      };
+    }).catch(err => {
+      err.status = 404;
+      next(err);
+    }) 
 });
 
 module.exports = router;

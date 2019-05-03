@@ -33,27 +33,27 @@ router.post('/users', (req, res, next) => {
   const newUser = req.body;
   if(newUser.password){
     User.find({emailAddress: newUser.emailAddress})
-        .then(user => {
-          if (user.length >= 1){
-            return res.status(409).json({
-              message: "Username already exists"
-            });
-          }else{
-            const user = new User({
-              firstName: newUser.firstName,
-              lastName: newUser.lastName,
-              emailAddress: newUser.emailAddress,
-              password: bcryptjs.hashSync(newUser.password)
-            });
-            user.save().then(() => {
-              res.location('/');
-              res.status(201).end();
-            }).catch(err => {
-              next(err);
-            });
-          };
-        }).catch(err => {
-          next(err);
+      .then(user => {
+        if (user.length >= 1){
+          return res.status(409).json({
+            message: "Username already exists"
+          });
+        }else{
+          const user = new User({
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            emailAddress: newUser.emailAddress,
+            password: bcryptjs.hashSync(newUser.password)
+          });
+          user.save().then(() => {
+            res.location('/');
+            res.status(201).end();
+          }).catch(err => {
+            next(err);
+          });
+        };
+      }).catch(err => {
+        next(err);
     });
   }else{
     res.send(500, { error: "Missing field(s)" });
